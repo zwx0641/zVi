@@ -1,0 +1,49 @@
+package com.zeno.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.druid.util.StringUtils;
+import com.imooc.pojo.Users;
+import com.imooc.utils.IMoocJSONResult;
+import com.imooc.utils.MD5Utils;
+import com.zeno.service.UserServ;
+
+@RestController
+public class RegistLoginController {
+	
+	@Autowired
+	private UserServ userServ;
+	
+	@PostMapping("/regist")
+	public IMoocJSONResult regist(@RequestBody Users user) {
+		//1  判断用户名密码不为空
+		if (StringUtils.isEmpty(user.getPassword()) || StringUtils.isEmpty(user.getUsername())) {
+			return IMoocJSONResult.errorMsg("用户名或密码不能为空");
+		}
+		
+		//2 判断用户名是否存在
+		boolean usernameExist = userServ.UsernameIsExist(user.getUsername());
+		
+		
+		//3 保存用户注册信息
+		if (!usernameExist) {
+			user.setNickname(user.getUsername());
+			user.setPassword(MD5Utils.getMD5Str(user.getPassword()));
+			user.setFansCounts(0);
+			user.setFollowCounts(0);
+			user.setReceiveLikeCounts(0);
+			user.setFaceImage(null);
+			
+			userServ.saveInfo(user);
+		} else {
+			IMoocJSONResult.errorMsg("此用户名已被占用");
+		}
+		
+		return IMoocJSONResult.ok();
+	}
+	
+}

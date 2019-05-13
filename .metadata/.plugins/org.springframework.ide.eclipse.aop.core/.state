@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aop-reference-model>
+<aop-project name="imooc-videos-dev-mini-api"/>
+<aop-project name="imooc-videos-dev-pojo"/>
+<aop-project name="imooc-videos-dev-mapper"/>
+<aop-project name="imooc-videos-dev-common"/>
+<aop-project name="mybatis-generatorConfig"/>
+<aop-project name="imooc-videos-dev-service"/>
+</aop-reference-model>

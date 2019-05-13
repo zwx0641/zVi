@@ -1,0 +1,5 @@
+package com.zeno.service;
+
+public interface UserServ {
+
+}

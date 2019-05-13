@@ -1,0 +1,31 @@
+package com.zeno.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.imooc.mapper.UsersMapper;
+import com.imooc.pojo.Users;
+
+public class UserServImple implements UserServ {
+	
+	@Autowired
+	private UsersMapper userMapper;
+
+	@Override
+	public boolean UsernameIsExist(String username) {
+		// TODO Auto-generated method stub
+		Users user = new Users();
+		user.setUsername(username);
+		
+		Users resultUsers = userMapper.selectOne(user);
+		
+		
+		return false;
+	}
+
+	@Override
+	public void saveInfo(Users user) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

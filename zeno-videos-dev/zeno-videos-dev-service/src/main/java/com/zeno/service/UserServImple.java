@@ -1,0 +1,42 @@
+package com.zeno.service;
+
+import org.n3r.idworker.Sid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.imooc.mapper.UsersMapper;
+import com.imooc.pojo.Users;
+
+public class UserServImple implements UserServ {
+	
+	@Autowired
+	private UsersMapper userMapper;
+	
+	@Autowired
+	private Sid sid;
+
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@Override
+	public boolean UsernameIsExist(String username) {
+		// TODO Auto-generated method stub
+		Users user = new Users();
+		user.setUsername(username);
+		
+		Users resultUsers = userMapper.selectOne(user);
+		
+		
+		return resultUsers == null ? false : true;
+	} 
+
+	
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void saveInfo(Users user) {
+		String sidString = sid.nextShort();
+		user.setId(sidString);
+		userMapper.insert(user);
+
+	}
+
+}

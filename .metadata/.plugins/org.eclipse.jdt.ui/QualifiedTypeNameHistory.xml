@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.springframework.web.bind.annotation.PostMapping"/>
+<fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestBody"/>
+<fullyQualifiedTypeName name="org.apache.yetus.audience.InterfaceAudience.Public"/>
+<fullyQualifiedTypeName name="com.alibaba.druid.util.StringUtils"/>
+<fullyQualifiedTypeName name="com.imooc.pojo.Users"/>
+<fullyQualifiedTypeName name="com.imooc.mapper.UsersMapper"/>
+<fullyQualifiedTypeName name="org.n3r.idworker.Sid"/>
+<fullyQualifiedTypeName name="java.lang.String"/>
+<fullyQualifiedTypeName name="org.springframework.transaction.annotation.Transactional"/>
+<fullyQualifiedTypeName name="org.springframework.transaction.annotation.Propagation"/>
+<fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+<fullyQualifiedTypeName name="com.zeno.service.UserServ"/>
+<fullyQualifiedTypeName name="com.imooc.utils.IMoocJSONResult"/>
+<fullyQualifiedTypeName name="com.imooc.utils.MD5Utils"/>
+</qualifiedTypeNameHistroy>
