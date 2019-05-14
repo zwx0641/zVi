@@ -8,4 +8,7 @@ public interface UserServ {
 	
 	//保存信息
 	public void saveInfo(Users user);
+
+	//对应用户名及密码
+	public Users queryUserForLogin(String username, String password);
 }
