@@ -11,4 +11,10 @@ public interface UserServ {
 
 	//对应用户名及密码
 	public Users queryUserForLogin(String username, String password);
+	
+	//修改信息
+	public void updateUserInfo(Users user);
+	
+	//
+	public Users queryUsersInfo(String userId);
 }
