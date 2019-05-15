@@ -73,12 +73,15 @@ Page({
         header: { 'content-type': 'application/json' },
         success: function (res) {
           var data = JSON.parse(res.data);
-          console.log(res);
           wx.hideLoading();
           if (data.status == 200) {
             wx.showToast({
               title: '上传成功',
+              duration: 1000
             });
+            wx.navigateTo({
+              url: '../mine/mine',
+            })
           } 
         }
       })

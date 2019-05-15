@@ -67,7 +67,7 @@ public class UserServImple implements UserServ {
 		userMapper.updateByExampleSelective(user, userExample);
 	}
 
-	
+	@Transactional(propagation = Propagation.SUPPORTS)
 	@Override
 	public Users queryUsersInfo(String userId) {
 		Example userExample = new Example(Users.class);

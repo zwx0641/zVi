@@ -18,4 +18,7 @@ public class BasicController {
 	
 	//ffmpeg工具目录
 	public static final String FFMPEGEXE = "C:\\ffmpeg\\bin\\ffmpeg.exe";
+	
+	//每页分页的记录
+	public static final Integer PAGE_SIZE = 5;
 }
