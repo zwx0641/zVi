@@ -1,0 +1,18 @@
+{
+  "pages": [
+    
+    "pages/userLogin/login",
+    "pages/userRegist/regist",
+    "pages/mine/mine",
+    "pages/chooseBgm/chooseBgm",
+    "pages/index/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "ZenoVideo",
+    "navigationBarTextStyle": "black"
+  },
+  "debug": true,
+  "sitemapLocation": "sitemap.json"
+}

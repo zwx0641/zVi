@@ -3,15 +3,20 @@ package com.zeno.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.druid.util.StringUtils;
+import com.imooc.pojo.Bgm;
 import com.imooc.utils.IMoocJSONResult;
+import com.imooc.utils.MergeVideoMp3;
+import com.zeno.service.BgmServ;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -22,7 +27,10 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @Api(value = "视频相关处理接口", tags = {"与视频处理相关的controller"})
 @RequestMapping("/video")
-public class VideoController {
+public class VideoController extends BasicController{
+	
+	@Autowired
+	private BgmServ bgmServ;
 	
 	@ApiOperation(value = "上传视频", notes = "视频接口")
 	@ApiImplicitParams({
@@ -48,10 +56,12 @@ public class VideoController {
 		}
 		
 		//上传的文件目录
-		String fileSpace = "C:/workspace/zenoVi/zeno-videos-store";
+		//String fileSpace = "C:/workspace/zenoVi/zeno-videos-store";
 		
 		//数据库中相对路径
 		String uploadPathDB = "/" + userId + "/video";
+		String finalVideoPath = "";
+		
 		
 		FileOutputStream fileOutputStream = null;
 		InputStream inputStream = null;
@@ -63,7 +73,7 @@ public class VideoController {
 				
 				if (!StringUtils.isEmpty(filename)) {
 					//绝对路径
-					String finalVideoPath = fileSpace + uploadPathDB + "/" + filename;
+					finalVideoPath = FILE_SPACE + uploadPathDB + "/" + filename;
 					//相对路径
 					uploadPathDB += ("/" + filename);
 					
@@ -88,6 +98,22 @@ public class VideoController {
 				fileOutputStream.close();
 			}
 		}
+		
+		//判断bgmID， 查询bgm信息并合成新的视频
+		if (!StringUtils.isEmpty(bgmId)) {
+			Bgm bgm = bgmServ.queryBgmById(bgmId);
+			String mp3InputPath = FILE_SPACE + bgm.getPath();
+			
+			String videoInputPath = finalVideoPath;
+			MergeVideoMp3 toolMergeVideoMp3 = new MergeVideoMp3(FFMPEGEXE);
+			
+			String videoOutputName = UUID.randomUUID().toString() + ".mp4";
+			uploadPathDB = "/" + userId + "/video" + videoOutputName;
+			finalVideoPath = FILE_SPACE +uploadPathDB;
+			toolMergeVideoMp3.convertor(videoInputPath, mp3InputPath, videoSeconds, finalVideoPath);
+		}
+		
+		
 		return IMoocJSONResult.ok(uploadPathDB);
 	}
 	

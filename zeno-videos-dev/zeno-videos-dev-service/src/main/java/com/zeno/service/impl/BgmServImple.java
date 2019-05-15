@@ -26,6 +26,14 @@ public class BgmServImple implements BgmServ {
 	public List<Bgm> queryBgmList() {
 		
 		return bgmMapper.selectAll();
+	}
+
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@Override
+	public Bgm queryBgmById(String bgmId) {
+		
+		
+		return bgmMapper.selectByPrimaryKey(bgmId);
 	} 
 
 
