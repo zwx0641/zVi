@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.imooc.mapper.SearchRecordsMapper;
 import com.imooc.mapper.VideosMapper;
 import com.imooc.mapper.VideosMapperCustom;
+import com.imooc.pojo.SearchRecords;
 import com.imooc.pojo.Videos;
 import com.imooc.pojo.vo.VideosVO;
 import com.imooc.utils.PagedResult;
@@ -25,6 +27,9 @@ public class VideoServImple implements VideoServ {
 	
 	@Autowired
 	private VideosMapperCustom videosMapperCustom;
+	
+	@Autowired
+	private SearchRecordsMapper searchRecordsMapper;
 	
 	@Autowired
 	private Sid sid;
@@ -51,11 +56,21 @@ public class VideoServImple implements VideoServ {
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public PagedResult getAllVideos(Integer page, Integer pageSize) {
+	public PagedResult getAllVideos(Videos video, Integer isSaveRecord, Integer page, Integer pageSize) {
+		
+		//保存热搜词
+		String desc = video.getVideoDesc();
+		if(isSaveRecord != null && isSaveRecord == 1) {
+			SearchRecords record = new SearchRecords();
+			String recordId = sid.nextShort();
+			record.setId(recordId);
+			record.setContent(desc);
+			searchRecordsMapper.insert(record);
+		}
 		
 		PageHelper.startPage(page, pageSize);
 		
-		List<VideosVO> list = videosMapperCustom.queryAllVideos();
+		List<VideosVO> list = videosMapperCustom.queryAllVideos(desc);
 		
 		PageInfo<VideosVO> pageList = new PageInfo<>(list);
 		
@@ -66,6 +81,16 @@ public class VideoServImple implements VideoServ {
 		pagedResult.setRecords(pageList.getTotal());
 		
 		return pagedResult;
+		
+		
+	}
+	
+	
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@Override
+	public List<String> getHotwords() {
+		
+		return searchRecordsMapper.getHotwords();
 	} 
 
 

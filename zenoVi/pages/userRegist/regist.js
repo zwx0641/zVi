@@ -41,7 +41,8 @@ Page({
               title: '注册成功',
               duration:2000
             }),
-            app.userInfo = res.data.data;
+            //app.userInfo = res.data.data;
+            app.setGlobalUserInfo(res.data.data);
             //跳转至登录
             wx.navigateTo({
               url: '../userLogin/login',

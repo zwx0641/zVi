@@ -1,6 +1,6 @@
 <view style='width:100%;height:100%;'>
-  <video src='http://192.168.1.101:8081/190514A4M8S1ZF80/video/tmp_8ad735a561b3564262d4de660263870e.mp4'
-  muted='{{true}}'
+  <video id="myvideo" src='{{src}}'
+  muted='{{false}}'
   controls='{{false}}'
   autoplay='{{true}}'
   loop='{{true}}'

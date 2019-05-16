@@ -1,5 +1,7 @@
 package com.zeno.service;
 
+import java.util.List;
+
 import com.imooc.pojo.Videos;
 import com.imooc.utils.PagedResult;
 
@@ -12,5 +14,8 @@ public interface VideoServ {
 	public void updateVideo(String videoId, String coverPath);
 	
 	//查询所有视频
-	public PagedResult getAllVideos(Integer page, Integer pageSize);
+	public PagedResult getAllVideos(Videos video, Integer isSaveRecord, Integer page, Integer pageSize);
+	
+	//
+	public List<String> getHotwords();
 }

@@ -21,4 +21,6 @@ public class BasicController {
 	
 	//每页分页的记录
 	public static final Integer PAGE_SIZE = 5;
+	
+	
 }

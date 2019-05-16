@@ -1,3 +1,5 @@
+var videoUtils = require('../../utils/videoUtils.js')
+
 const app = getApp()
 
 Page({
@@ -7,7 +9,9 @@ Page({
 
   onLoad: function() {
     var me = this;
-    var user = app.userInfo;
+     
+    //app.userInfo = res.data.data;
+    var user = app.getGlobalUserInfo();
 
     wx.showLoading({
       title: '请等待',
@@ -16,7 +20,11 @@ Page({
     wx.request({
       url: serverUrl + '/user/query?userId=' + user.id,
       method: 'POST',
-      header: { 'content-type': 'application/json' },
+      header: { 
+        'content-type': 'application/json',
+        'userId': user.id,
+        'userToken': user.userToken
+       },
       success: function (res) {
         wx.hideLoading();
         if(res.data.status == 200) {
@@ -41,7 +49,7 @@ Page({
 
   logout: function() {
     var serverUrl = app.serverUrl;
-    var user = app.userInfo;
+    var user = app.getGlobalUserInfo();
     wx.request({
       url: serverUrl + '/logout?userId=' + user.id,
       method: 'POST',
@@ -56,7 +64,7 @@ Page({
             title: '注销成功',
             duration: 1500
           }),
-          app.userInfo = null;
+          wx.removeStorageSync("userInfo");
           wx.navigateTo({
             url: '../userLogin/login'
           })
@@ -78,8 +86,9 @@ Page({
           title: '上传中',
         })
         var serverUrl = app.serverUrl;
+        var userInfo = app.getGlobalUserInfo();
         wx.uploadFile({
-          url: serverUrl + '/user/uploadFace?userId=' + app.userInfo.id,
+          url: serverUrl + '/user/uploadFace?userId=' + userInfo.id,
           filePath: tempFilePaths[0],
           name: 'file',
           header: { 'content-type': 'application/json' },
@@ -108,43 +117,43 @@ Page({
   },
 
   uploadVideo: function() {
-    var me = this;
-    wx.chooseVideo({
-      sourceType: ['album', 'camera'],
-      maxDuration: 15,
-      camera: 'back',
-      success(res) {
-        console.log(res);
+    videoUtils.uploadVideo();
+  },
 
-        var duration = res.duration;
-        var tmpHeight = res.height;
-        var tmpWidth = res.width;
-        var tmpVideoUrl = res.tempFilePath;
-        var tmpCoverUrl = res.thumbTempFilePath;
+    logout: function () {
+    // var user = app.userInfo;
+    var user = app.getGlobalUserInfo();
 
-        if(duration > 16) {
+    var serverUrl = app.serverUrl;
+    wx.showLoading({
+      title: '请等待...',
+    });
+    // 调用后端
+    wx.request({
+      url: serverUrl + '/logout?userId=' + user.id,
+      method: "POST",
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success: function (res) {
+        console.log(res.data);
+        wx.hideLoading();
+        if (res.data.status == 200) {
+          // 登录成功跳转 
           wx.showToast({
-            title: '视频长度不能超过15秒',
-            icon: 'none',
+            title: '注销成功',
+            icon: 'success',
             duration: 2000
-          })
-        } else if (duration < 1) {
-          wx.showToast({
-            title: '请上传超过1秒的视频',
-            icon: 'none',
-            duration: 2000
-          })
-        } else {
-          //TODO bgm选择页面
-          wx.navigateTo({
-            url: '../chooseBgm/chooseBgm?duration=' + duration
-              + "&tmpHeight=" + tmpHeight
-              + "&tmpWidth=" + tmpWidth
-              + "&tmpVideoUrl=" + tmpVideoUrl
-              + "&tmpCoverUrl=" + tmpCoverUrl,
+          });
+          // app.userInfo = null;
+          // 注销以后，清空缓存
+          wx.removeStorageSync("userInfo")
+          // 页面跳转
+          wx.redirectTo({
+            url: '../userLogin/login',
           })
         }
       }
     })
-  }
+  },
 })

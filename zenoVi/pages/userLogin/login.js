@@ -4,6 +4,17 @@ Page({
   data: {
 
   },
+
+  onLoad: function(params) {
+    var me = this;
+    var redirectUrl = params.redirectUrl;
+    debugger;
+    redirectUrl = redirectUrl.replace(/#/g, '?');
+    redirectUrl = redirectUrl.replace(/@/g, '?');
+
+    me.redirectUrl = redirectUrl;
+  },
+
   goRegistPage: function(){
     wx.navigateTo({
       url: '../userRegist/regist',
@@ -11,6 +22,7 @@ Page({
   },
 
   doLogin: function(e) {
+    var me = this;
     var formObject = e.detail.value;
     var username = formObject.username;
     var password = formObject.password;
@@ -43,11 +55,18 @@ Page({
               title: '登录成功',
               duration: 2000
             }),
-            app.userInfo = res.data.data;
+            //app.userInfo = res.data.data;
+            app.setGlobalUserInfo(res.data.data);
             //跳转至mine
-            wx.navigateTo({
-              url: '../mine/mine',
-            })
+            var redirectUrl = me.redirectUrl;
+
+            if(redirectUrl != null && redirectUrl != undefined && redirectUrl != '') {
+              wx.navigateTo({
+                url: redirectUrl,
+              })
+            }
+
+            
           } else if (status == 500) {
             wx.showToast({
               title: res.data.msg,

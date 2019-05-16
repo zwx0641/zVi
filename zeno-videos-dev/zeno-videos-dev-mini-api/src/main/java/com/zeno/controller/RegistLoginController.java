@@ -111,7 +111,7 @@ public class RegistLoginController extends BasicController{
 	public IMoocJSONResult logout(String userId) {
 		redis.del(USER_REDIS_SESSION + ":" +userId); 
 		
-		return null;
+		return IMoocJSONResult.ok();
 	}
 	
 }

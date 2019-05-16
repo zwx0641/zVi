@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -210,16 +211,26 @@ public class VideoController extends BasicController{
 		return IMoocJSONResult.ok(uploadPathDB);
 	}
 	
+	//分页和搜索查询列表
+	//isSaveRecord = 1 - 需要保存
+	//				0 - 不需要保存
 	@PostMapping(value = "/showAll")
-	public IMoocJSONResult showAll(Integer page) throws Exception{
+	public IMoocJSONResult showAll(@RequestBody Videos video, Integer isSaveRecord, Integer page) throws Exception{
 		
 		if(page == null) {
 			page = 1;
 		}
 		
-		PagedResult result = videosServ.getAllVideos(page, PAGE_SIZE);
+		PagedResult result = videosServ.getAllVideos(video, isSaveRecord, page, PAGE_SIZE);
 		
 		return IMoocJSONResult.ok(result);
 		
+	}
+	
+	@PostMapping(value = "/hot")
+	public IMoocJSONResult hot() throws Exception {
+		
+		
+		return IMoocJSONResult.ok(videosServ.getHotwords());
 	}
 }
