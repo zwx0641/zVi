@@ -4,4 +4,8 @@ import com.imooc.pojo.Users;
 import com.imooc.utils.MyMapper;
 
 public interface UsersMapper extends MyMapper<Users> {
+	
+	public void addGetLikeCount(String userId);
+	
+	public void reduceGetLikeCount(String userId);
 }

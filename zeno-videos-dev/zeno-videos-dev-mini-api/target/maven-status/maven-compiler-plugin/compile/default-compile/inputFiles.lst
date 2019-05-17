@@ -4,6 +4,7 @@ C:\workspace\zenoVi\zeno-videos-dev\zeno-videos-dev-mini-api\src\main\java\com\z
 C:\workspace\zenoVi\zeno-videos-dev\zeno-videos-dev-mini-api\src\main\java\com\zeno\Application.java
 C:\workspace\zenoVi\zeno-videos-dev\zeno-videos-dev-mini-api\src\main\java\com\zeno\controller\VideoController.java
 C:\workspace\zenoVi\zeno-videos-dev\zeno-videos-dev-mini-api\src\main\java\com\zeno\Swagger2.java
+C:\workspace\zenoVi\zeno-videos-dev\zeno-videos-dev-mini-api\src\main\java\com\zeno\controller\interceptor\MiniInterceptor.java
 C:\workspace\zenoVi\zeno-videos-dev\zeno-videos-dev-mini-api\src\main\java\com\zeno\controller\BasicController.java
 C:\workspace\zenoVi\zeno-videos-dev\zeno-videos-dev-mini-api\src\main\java\com\zeno\controller\HelloWorldController.java
 C:\workspace\zenoVi\zeno-videos-dev\zeno-videos-dev-mini-api\src\main\java\com\zeno\controller\BgmController.java

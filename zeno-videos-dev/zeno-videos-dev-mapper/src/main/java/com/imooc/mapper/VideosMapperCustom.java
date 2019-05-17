@@ -11,5 +11,7 @@ import com.imooc.utils.MyMapper;
 public interface VideosMapperCustom extends MyMapper<Videos> {
 	public List<VideosVO> queryAllVideos(@Param("videoDesc") String videoDesc);
 	
+	public void addVideoLikeCount(String videoId);
 	
+	public void reduceVideoLikeCount(String videoId);
 }

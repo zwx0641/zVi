@@ -1,5 +1,6 @@
 package com.zeno.service.impl;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 import org.n3r.idworker.Sid;
@@ -11,13 +12,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.imooc.mapper.SearchRecordsMapper;
+import com.imooc.mapper.UsersLikeVideosMapper;
+import com.imooc.mapper.UsersMapper;
 import com.imooc.mapper.VideosMapper;
 import com.imooc.mapper.VideosMapperCustom;
 import com.imooc.pojo.SearchRecords;
+import com.imooc.pojo.Users;
+import com.imooc.pojo.UsersLikeVideos;
 import com.imooc.pojo.Videos;
 import com.imooc.pojo.vo.VideosVO;
 import com.imooc.utils.PagedResult;
 import com.zeno.service.VideoServ;
+
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
 
 @Service
 public class VideoServImple implements VideoServ {
@@ -29,7 +37,12 @@ public class VideoServImple implements VideoServ {
 	private VideosMapperCustom videosMapperCustom;
 	
 	@Autowired
+	private UsersMapper userMapper;
+	
+	@Autowired
 	private SearchRecordsMapper searchRecordsMapper;
+	
+	@Autowired UsersLikeVideosMapper usersLikeVideosMapper;
 	
 	@Autowired
 	private Sid sid;
@@ -91,6 +104,48 @@ public class VideoServImple implements VideoServ {
 	public List<String> getHotwords() {
 		
 		return searchRecordsMapper.getHotwords();
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void userLikeVideo(String userId, String videoId, String videoCreatorId) {
+		//保存用户视频喜欢关联关系表
+		String likeId = sid.nextShort();
+		
+		
+		UsersLikeVideos ulv = new UsersLikeVideos();
+		ulv.setId(likeId);
+		ulv.setUserId(userId);
+		ulv.setVideoId(videoId);
+		
+		
+		usersLikeVideosMapper.insert(ulv);
+		
+		//视频喜欢数量累加
+		videosMapperCustom.addVideoLikeCount(videoId);
+
+		//用户喜欢数量累加
+		userMapper.addGetLikeCount(videoCreatorId);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void userUnlikeVideo(String userId, String videoId, String videoCreatorId) {
+		//删除用户视频喜欢关联关系表
+		Example example = new Example(UsersLikeVideos.class);
+		Criteria criteria = example.createCriteria();
+		
+		criteria.andEqualTo("userId", userId);
+		criteria.andEqualTo("videoId", videoId);
+		
+		usersLikeVideosMapper.deleteByExample(example);
+		
+		//视频喜欢数量累-
+		videosMapperCustom.reduceVideoLikeCount(videoId);
+		
+		//用户喜欢数量累-
+		userMapper.reduceGetLikeCount(videoCreatorId);
+		
 	} 
 
 

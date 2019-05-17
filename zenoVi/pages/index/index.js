@@ -91,7 +91,7 @@ Page({
     // 判断当前页数和总页数是否相等，如果想的则无需查询
     if (currentPage === totalPage) {
       wx.showToast({
-        title: '已经没有视频啦~~',
+        title: '已经没有视频啦',
         icon: "none"
       })
       return;

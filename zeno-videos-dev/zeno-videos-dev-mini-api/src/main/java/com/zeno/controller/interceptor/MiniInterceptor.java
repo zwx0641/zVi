@@ -42,7 +42,7 @@ public class MiniInterceptor implements HandlerInterceptor {
 				returnErrorResponse(response, new IMoocJSONResult().errorTokenMsg("请登录"));
 				return false;
 			} else {
-				if (uniqueToken.equals(userToken)) {
+				if ( !uniqueToken.equals(userToken )) {
 					System.out.println("账号被挤出");
 					returnErrorResponse(response, new IMoocJSONResult().errorTokenMsg("账号被挤出"));
 					return false;
@@ -50,8 +50,9 @@ public class MiniInterceptor implements HandlerInterceptor {
 			}
 		} else {
 			System.out.println("请登录");
+			returnErrorResponse(response, new IMoocJSONResult().errorTokenMsg("请登录"));
 		}
-		return false;
+		return true;
 	}
 	
 	public void returnErrorResponse(HttpServletResponse response, IMoocJSONResult result) 
@@ -76,7 +77,7 @@ public class MiniInterceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		// TODO Auto-generated method stub
+		
 
 	}
 
@@ -86,8 +87,7 @@ public class MiniInterceptor implements HandlerInterceptor {
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }

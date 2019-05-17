@@ -1,17 +1,21 @@
 package com.zeno.service.impl;
 
+import java.util.List;
+
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.druid.util.StringUtils;
+import com.imooc.mapper.UsersLikeVideosMapper;
 import com.imooc.mapper.UsersMapper;
 import com.imooc.pojo.Users;
-import com.imooc.utils.MD5Utils;
+import com.imooc.pojo.UsersLikeVideos;
+import com.imooc.utils.IMoocJSONResult;
 import com.zeno.service.UserServ;
 
-import tk.mybatis.mapper.common.example.UpdateByExampleSelectiveMapper;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
 
@@ -20,6 +24,9 @@ public class UserServImple implements UserServ {
 	
 	@Autowired
 	private UsersMapper userMapper;
+	
+	@Autowired
+	private UsersLikeVideosMapper usersLikeVideoMapper;
 	
 	@Autowired
 	private Sid sid;
@@ -76,5 +83,28 @@ public class UserServImple implements UserServ {
 		Users user = userMapper.selectOneByExample(userExample);
 		
 		return user;
+	}
+
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@Override
+	public boolean isUserLikeVideo(String userId, String videoId) {
+		
+		if(StringUtils.isEmpty(userId) || StringUtils.isEmpty(videoId)) {
+			return false;
+		}
+		
+		Example example = new Example(UsersLikeVideos.class);
+		Criteria criteria = example.createCriteria();
+		
+		criteria.andEqualTo("userId", userId);
+		criteria.andEqualTo("videoId", videoId);
+		
+		List<UsersLikeVideos> list = usersLikeVideoMapper.selectByExample(example);
+		
+		if(list != null && list.size() > 0) {
+			return true;
+		}
+		
+		return false;
 	}
 }

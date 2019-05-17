@@ -18,4 +18,11 @@ public interface VideoServ {
 	
 	//
 	public List<String> getHotwords();
+	
+	//点赞
+	public void userLikeVideo(String userId, String videoId, String videoCreatorId);
+	
+	//取消点赞
+	public void userUnlikeVideo(String userId, String videoId, String videoCreatorId);
+
 }

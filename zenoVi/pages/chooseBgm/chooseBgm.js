@@ -9,7 +9,9 @@ Page({
 
     onLoad: function(params) {
       var me = this;
-      var user = app.userInfo;
+      //var user = app.userInfo;
+
+      var user = app.getGlobalUserInfo();
       console.log(params);
       me.setData({
         videoParams: params
@@ -22,7 +24,11 @@ Page({
       wx.request({
         url: serverUrl + '/bgm/list',
         method: 'POST',
-        header: { 'content-type': 'application/json' },
+        header: { 
+          'content-type': 'application/json',
+          'userId': user.id,
+          'userToken': user.userToken
+         },
         success: function (res) {
           console.log(res.data);
           wx.hideLoading();
@@ -39,6 +45,8 @@ Page({
 
     upload: function(e) {
       var me = this;
+      var user = app.getGlobalUserInfo();
+
       var bgmId = e.detail.value.bgmId;
       var desc = e.detail.value.desc;
 
@@ -71,7 +79,11 @@ Page({
         },
         filePath: tmpVideoUrl,
         name: 'file',
-        header: { 'content-type': 'application/json' },
+        header: { 
+          'content-type': 'application/json',
+          'userId': user.id,
+          'userToken': user.userToken 
+          },
         success: function (res) {
           var data = JSON.parse(res.data);
           wx.hideLoading();

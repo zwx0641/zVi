@@ -8,11 +8,13 @@ Page({
   onLoad: function(params) {
     var me = this;
     var redirectUrl = params.redirectUrl;
-    debugger;
-    redirectUrl = redirectUrl.replace(/#/g, '?');
-    redirectUrl = redirectUrl.replace(/@/g, '?');
+    
+    if (redirectUrl != null && redirectUrl != undefined && redirectUrl != ''){
+      redirectUrl = redirectUrl.replace(/#/g, '?');
+      redirectUrl = redirectUrl.replace(/@/g, '?');
 
-    me.redirectUrl = redirectUrl;
+      me.redirectUrl = redirectUrl;
+    }
   },
 
   goRegistPage: function(){
@@ -63,6 +65,10 @@ Page({
             if(redirectUrl != null && redirectUrl != undefined && redirectUrl != '') {
               wx.navigateTo({
                 url: redirectUrl,
+              })
+            } else {
+              wx.redirectTo({
+                url: '../mine/mine',
               })
             }
 

@@ -233,4 +233,21 @@ public class VideoController extends BasicController{
 		
 		return IMoocJSONResult.ok(videosServ.getHotwords());
 	}
+	
+	@PostMapping(value = "/userLike")
+	public IMoocJSONResult userLike(String userId, String videoId, String videoCreatorId) 
+			throws Exception {
+		
+		videosServ.userLikeVideo(userId, videoId, videoCreatorId);
+		
+		return IMoocJSONResult.ok();
+	}
+	
+	@PostMapping(value = "/userUnlike")
+	public IMoocJSONResult userUnlike(String userId, String videoId, String videoCreatorId) 
+			throws Exception {
+		
+		videosServ.userUnlikeVideo(userId, videoId, videoCreatorId);
+		return IMoocJSONResult.ok(videosServ.getHotwords());
+	}
 }

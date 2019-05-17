@@ -17,4 +17,7 @@ public interface UserServ {
 	
 	//
 	public Users queryUsersInfo(String userId);
+	
+	//
+	public boolean isUserLikeVideo(String userId, String videoId);
 }

@@ -26,15 +26,17 @@ Page({
         'userToken': user.userToken
        },
       success: function (res) {
+        console.log(res.data);
         wx.hideLoading();
         if(res.data.status == 200) {
           var userInfo = res.data.data;
+          
           var faceUrl = '../resource/images/noneface.png';
           if(userInfo.faceImage != null && userInfo.faceImage != '' && 
           userInfo.faceImage != undefined) {
             var faceUrl = serverUrl + userInfo.faceImage;
           }
-
+          
           me.setData({
             faceUrl: faceUrl,
             fansCounts: userInfo.fansCounts,
@@ -42,6 +44,17 @@ Page({
             receiveLikeCounts: userInfo.receiveLikeCounts,
             nickname: userInfo.nickname
           });
+        } else if(res.data.status == 502) {
+          wx.showToast({
+            title: res.data.msg,
+            duration: 3000,
+            icon: 'none',
+            success: function() {
+              wx.redirectTo({
+                url: '../userLogin/login',
+              })
+            }
+          })
         }
       }
     });    

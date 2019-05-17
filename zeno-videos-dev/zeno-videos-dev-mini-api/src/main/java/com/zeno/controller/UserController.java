@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.druid.util.StringUtils;
 import com.imooc.pojo.Users;
+import com.imooc.pojo.vo.PublisherVideo;
 import com.imooc.pojo.vo.UsersVO;
 import com.imooc.utils.IMoocJSONResult;
 import com.zeno.service.UserServ;
@@ -105,6 +106,28 @@ public class UserController extends BasicController{
 		BeanUtils.copyProperties(userInfo, usersVO);
 		
 		return IMoocJSONResult.ok(usersVO);
+		
+	}
+	
+	@PostMapping("/queryPublisher")
+	public IMoocJSONResult query(String loginUserId, String videoId, String publisherId) throws Exception {
+		if(StringUtils.isEmpty(publisherId)) {
+			return IMoocJSONResult.errorMsg("");
+		}
+		
+		//1.查询发布者信息
+		Users userInfo = userServ.queryUsersInfo(publisherId);
+		UsersVO publisher = new UsersVO();
+		BeanUtils.copyProperties(userInfo, publisher);
+		
+		//2.点赞关系
+		boolean userLikeVideo = userServ.isUserLikeVideo(loginUserId, videoId);
+		
+		PublisherVideo pv = new PublisherVideo();
+		pv.setPulisher(publisher);
+		pv.setUserLikeVideo(userLikeVideo);
+		
+		return IMoocJSONResult.ok(pv);
 		
 	}
 }
