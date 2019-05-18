@@ -24,5 +24,9 @@ public interface VideoServ {
 	
 	//取消点赞
 	public void userUnlikeVideo(String userId, String videoId, String videoCreatorId);
+	
+	public PagedResult queryMyLikeVideos(String userId, Integer page, Integer pageSize);
+	
+	public PagedResult queryMyFollowVideos(String userId, Integer page, Integer pageSize);
 
 }

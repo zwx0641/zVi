@@ -25,4 +25,24 @@
   	
   </update>
   
+  <update id="addFansCount" parameterType="String">
+  	update users set fans_counts=fans_counts+1 where id=#{videoId}
+  	
+  </update>
+  
+  <update id="reduceFansCount" parameterType="String">
+  	update users set fans_counts=fans_counts-1 where id=#{videoId}
+  	
+  </update>
+  
+  <update id="addFollowersCount" parameterType="String">
+  	update users set follow_counts=follow_counts+1 where id=#{videoId}
+  	
+  </update>
+  
+  <update id="reduceFollowersCount" parameterType="String">
+  	update users set follow_counts=follow_counts-1 where id=#{videoId}
+  	
+  </update>
+  
 </mapper>

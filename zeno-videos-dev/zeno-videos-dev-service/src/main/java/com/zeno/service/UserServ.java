@@ -20,4 +20,13 @@ public interface UserServ {
 	
 	//
 	public boolean isUserLikeVideo(String userId, String videoId);
+	
+	//用户粉丝关系
+	public void saveUserFanRelation(String userId, String fanId);
+	public void deleteUserFanRelation(String userId, String fanId);
+	
+	//查询是否关注
+	public boolean queryIfFollow(String userId, String fanId);
+	
+	
 }

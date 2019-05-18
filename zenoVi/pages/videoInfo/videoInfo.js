@@ -54,6 +54,14 @@ Page({
       method: 'POST',
       success: function(res) {
         console.log(res.data);
+        var publisher = res.data.data.publisher;
+        var userLikeVideo = res.data.data.userLikeVideo;
+        
+        me.setData({
+          serverUrl: serverUrl,
+          publisher: publisher,
+          userLikeVideo: userLikeVideo
+        })
       }
     })
   },
@@ -72,6 +80,24 @@ Page({
     wx.navigateTo({
       url: '../mine/mine',
     })
+  },
+
+  showPublisher: function() {
+    var user = app.getGlobalUserInfo();
+    var me = this;
+    var videoInfo = me.data.videoInfo;
+    var realUrl = '../mine/mine#publisherId@' + videoInfo.userId;
+
+    
+    if (user == null || user == '' || user == undefined) {
+      wx.navigateTo({
+        url: '../userLogin/login?redirectUrl=' + realUrl,
+      })
+    } else {
+      wx.navigateTo({
+        url: '../mine/mine?publisherId=' + videoInfo.userId,
+      })
+    }
   },
 
   upload: function() {
@@ -137,9 +163,17 @@ Page({
         success: function(res) {
           console.log(res);
           wx.hideLoading();
-          me.setData({
-            userLikeVideo: !userLikeVideo
-          })
+          if(userLikeVideo == false) {
+            me.setData({
+              userLikeVideo: true
+            })
+          } else {
+            me.setData({
+              userLikeVideo: false
+            })
+          }
+          
+          console.log(me.data);
         }
       })
     }

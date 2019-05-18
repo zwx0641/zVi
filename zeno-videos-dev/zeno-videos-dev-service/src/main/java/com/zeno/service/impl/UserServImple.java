@@ -9,9 +9,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.druid.util.StringUtils;
+import com.imooc.mapper.UsersFansMapper;
 import com.imooc.mapper.UsersLikeVideosMapper;
 import com.imooc.mapper.UsersMapper;
 import com.imooc.pojo.Users;
+import com.imooc.pojo.UsersFans;
 import com.imooc.pojo.UsersLikeVideos;
 import com.imooc.utils.IMoocJSONResult;
 import com.zeno.service.UserServ;
@@ -27,6 +29,9 @@ public class UserServImple implements UserServ {
 	
 	@Autowired
 	private UsersLikeVideosMapper usersLikeVideoMapper;
+	
+	@Autowired
+	private UsersFansMapper usersFansMapper;
 	
 	@Autowired
 	private Sid sid;
@@ -102,6 +107,56 @@ public class UserServImple implements UserServ {
 		List<UsersLikeVideos> list = usersLikeVideoMapper.selectByExample(example);
 		
 		if(list != null && list.size() > 0) {
+			return true;
+		}
+		System.out.print(list);
+		
+		return false;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void saveUserFanRelation(String userId, String fanId) {
+		String relId = sid.nextShort();
+		
+		
+		UsersFans usersFans = new UsersFans();
+		usersFans.setId(relId);
+		usersFans.setUserId(userId);
+		usersFans.setFanId(fanId);
+		
+		usersFansMapper.insert(usersFans);
+		
+		userMapper.addFansCount(userId);
+		userMapper.addFollowersCount(fanId);
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void deleteUserFanRelation(String userId, String fanId) {
+		Example example = new Example(UsersFans.class);
+		Criteria criteria = example.createCriteria();
+		
+		criteria.andEqualTo("userId", userId);
+		criteria.andEqualTo("fanId", fanId);
+		
+		usersFansMapper.deleteByExample(example);
+		userMapper.reduceFansCount(userId);
+		userMapper.reduceFollowersCount(fanId);
+	}
+
+
+	@Override
+	public boolean queryIfFollow(String userId, String fanId) {
+		Example example = new Example(UsersFans.class);
+		Criteria criteria = example.createCriteria();
+		
+		criteria.andEqualTo("userId", userId);
+		criteria.andEqualTo("fanId", fanId);
+		
+		List<UsersFans> list = usersFansMapper.selectByExample(example);
+		
+		if(list != null && !list.isEmpty() && list.size() > 0) {
 			return true;
 		}
 		

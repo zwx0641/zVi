@@ -1,6 +1,5 @@
 package com.zeno.service.impl;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import org.n3r.idworker.Sid;
@@ -17,7 +16,6 @@ import com.imooc.mapper.UsersMapper;
 import com.imooc.mapper.VideosMapper;
 import com.imooc.mapper.VideosMapperCustom;
 import com.imooc.pojo.SearchRecords;
-import com.imooc.pojo.Users;
 import com.imooc.pojo.UsersLikeVideos;
 import com.imooc.pojo.Videos;
 import com.imooc.pojo.vo.VideosVO;
@@ -73,6 +71,7 @@ public class VideoServImple implements VideoServ {
 		
 		//保存热搜词
 		String desc = video.getVideoDesc();
+		String userId = video.getUserId();
 		if(isSaveRecord != null && isSaveRecord == 1) {
 			SearchRecords record = new SearchRecords();
 			String recordId = sid.nextShort();
@@ -83,7 +82,7 @@ public class VideoServImple implements VideoServ {
 		
 		PageHelper.startPage(page, pageSize);
 		
-		List<VideosVO> list = videosMapperCustom.queryAllVideos(desc);
+		List<VideosVO> list = videosMapperCustom.queryAllVideos(desc, userId);
 		
 		PageInfo<VideosVO> pageList = new PageInfo<>(list);
 		
@@ -146,7 +145,42 @@ public class VideoServImple implements VideoServ {
 		//用户喜欢数量累-
 		userMapper.reduceGetLikeCount(videoCreatorId);
 		
-	} 
+	}
+
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@Override
+	public PagedResult queryMyLikeVideos(String userId, Integer page, Integer pageSize) {
+		PageHelper.startPage(page, pageSize);
+		List<VideosVO> list = videosMapperCustom.queryMyLikeVideos(userId);
+				
+		PageInfo<VideosVO> pageList = new PageInfo<>(list);
+		
+		PagedResult pagedResult = new PagedResult();
+		pagedResult.setTotal(pageList.getPages());
+		pagedResult.setRows(list);
+		pagedResult.setPage(page);
+		pagedResult.setRecords(pageList.getTotal());
+		
+		return pagedResult;
+	}
+
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@Override
+	public PagedResult queryMyFollowVideos(String userId, Integer page, Integer pageSize) {
+		PageHelper.startPage(page, pageSize);
+		List<VideosVO> list = videosMapperCustom.queryMyFollowVideos(userId);
+				
+		PageInfo<VideosVO> pageList = new PageInfo<>(list);
+		
+		PagedResult pagedResult = new PagedResult();
+		pagedResult.setTotal(pageList.getPages());
+		pagedResult.setRows(list);
+		pagedResult.setPage(page);
+		pagedResult.setRecords(pageList.getTotal());
+		
+		
+		return pagedResult;
+	}
 
 
 }

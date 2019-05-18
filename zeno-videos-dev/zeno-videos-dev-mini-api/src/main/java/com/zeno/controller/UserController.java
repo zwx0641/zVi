@@ -96,7 +96,7 @@ public class UserController extends BasicController{
 	@ApiImplicitParam(name = "userId", value = "用户id", required = true, 
 	dataType = "String", paramType = "query")
 	@PostMapping("/query")
-	public IMoocJSONResult query(String userId) throws Exception {
+	public IMoocJSONResult query(String userId, String fanId) throws Exception {
 		if(StringUtils.isEmpty(userId)) {
 			return IMoocJSONResult.errorMsg("用户id为空");
 		}
@@ -105,9 +105,14 @@ public class UserController extends BasicController{
 		UsersVO usersVO = new UsersVO();
 		BeanUtils.copyProperties(userInfo, usersVO);
 		
+		usersVO.setFollow(userServ.queryIfFollow(userId, fanId));
+		
+		
+		
 		return IMoocJSONResult.ok(usersVO);
 		
 	}
+	
 	
 	@PostMapping("/queryPublisher")
 	public IMoocJSONResult query(String loginUserId, String videoId, String publisherId) throws Exception {
@@ -124,10 +129,34 @@ public class UserController extends BasicController{
 		boolean userLikeVideo = userServ.isUserLikeVideo(loginUserId, videoId);
 		
 		PublisherVideo pv = new PublisherVideo();
-		pv.setPulisher(publisher);
+		pv.setPublisher(publisher);
 		pv.setUserLikeVideo(userLikeVideo);
 		
 		return IMoocJSONResult.ok(pv);
+		
+	}
+	
+	@PostMapping("/beyourfans")
+	public IMoocJSONResult beyourfans(String userId, String fanId) throws Exception {
+		if(StringUtils.isEmpty(userId) || StringUtils.isEmpty(fanId)) {
+			return IMoocJSONResult.errorMsg("");
+		}
+		
+		userServ.saveUserFanRelation(userId, fanId);
+		
+		return IMoocJSONResult.ok("关注成功");
+		
+	}
+	
+	@PostMapping("/dontbeyourfans")
+	public IMoocJSONResult dontbeyourfans(String userId, String fanId) throws Exception {
+		if(StringUtils.isEmpty(userId) || StringUtils.isEmpty(fanId)) {
+			return IMoocJSONResult.errorMsg("");
+		}
+		
+		userServ.deleteUserFanRelation(userId, fanId);
+		
+		return IMoocJSONResult.ok("取消关注成功");
 		
 	}
 }
