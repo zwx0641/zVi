@@ -1,5 +1,6 @@
 package com.zeno.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.n3r.idworker.Sid;
@@ -12,10 +13,11 @@ import com.alibaba.druid.util.StringUtils;
 import com.imooc.mapper.UsersFansMapper;
 import com.imooc.mapper.UsersLikeVideosMapper;
 import com.imooc.mapper.UsersMapper;
+import com.imooc.mapper.UsersReportMapper;
 import com.imooc.pojo.Users;
 import com.imooc.pojo.UsersFans;
 import com.imooc.pojo.UsersLikeVideos;
-import com.imooc.utils.IMoocJSONResult;
+import com.imooc.pojo.UsersReport;
 import com.zeno.service.UserServ;
 
 import tk.mybatis.mapper.entity.Example;
@@ -32,6 +34,9 @@ public class UserServImple implements UserServ {
 	
 	@Autowired
 	private UsersFansMapper usersFansMapper;
+	
+	@Autowired
+	private UsersReportMapper usersReportMapper;
 	
 	@Autowired
 	private Sid sid;
@@ -145,7 +150,7 @@ public class UserServImple implements UserServ {
 		userMapper.reduceFollowersCount(fanId);
 	}
 
-
+	@Transactional(propagation = Propagation.SUPPORTS)
 	@Override
 	public boolean queryIfFollow(String userId, String fanId) {
 		Example example = new Example(UsersFans.class);
@@ -161,5 +166,16 @@ public class UserServImple implements UserServ {
 		}
 		
 		return false;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
+	public void reportUser(UsersReport usersReport) {
+		
+		String urIdString = sid.nextShort();
+		usersReport.setId(urIdString);
+		usersReport.setCreateDate(new Date());
+		
+		usersReportMapper.insert(usersReport);
 	}
 }

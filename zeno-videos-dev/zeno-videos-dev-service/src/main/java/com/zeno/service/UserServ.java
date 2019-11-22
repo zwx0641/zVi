@@ -1,6 +1,7 @@
 package com.zeno.service;
 
 import com.imooc.pojo.Users;
+import com.imooc.pojo.UsersReport;
 
 public interface UserServ {
 	//用户是否存在
@@ -27,6 +28,8 @@ public interface UserServ {
 	
 	//查询是否关注
 	public boolean queryIfFollow(String userId, String fanId);
+	
+	public void reportUser(UsersReport usersReport);
 	
 	
 }

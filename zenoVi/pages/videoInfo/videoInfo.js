@@ -130,6 +130,60 @@ Page({
     }
   },
 
+  shareMe: function() {
+    var me = this;
+    var user = app.getGlobalUserInfo();
+    wx.showActionSheet({
+      itemList: ['下载到本地', '举报用户', '分享到朋友圈', '分享到qq空间', '分享到微博'],
+      success: function(res) {
+        
+        if (res.tapIndex == 0) {
+          //下载
+          wx.showLoading({
+            title: '下载中',
+          })
+          wx.downloadFile({
+            url: app.serverUrl + me.data.videoInfo.videoPath,
+            success: function(res) {
+              if(res.statusCode === 200) {
+                
+                wx.saveVideoToPhotosAlbum({
+                  filePath: res.tempFilePath,
+                  success: function(res) {
+                    console.log(res.errMsg);
+                    wx.hideLoading();
+                  }
+                })
+              }
+            }
+          
+          })
+        } else if (res.tapIndex == 1) {
+          //举报
+          var videoInfo = JSON.stringify(me.data.videoInfo);
+          var realUrl = '../videoInfo/videoInfo#videoInfo@' + videoInfo;
+
+          if(user == null || user == undefined || user == '') {
+            wx.navigateTo({
+              url: '../userLogin/userLogin?redirectUrl=' + realUrl,
+            })
+          } else {
+            var publisherUserId = me.data.videoInfo.userId;
+            var videoId = me.data.videoInfo.id;
+            var currentUserId = user.id;
+            wx.navigateTo({
+              url: '../report/report?videoId=' + videoId + '&publisherUserId=' + publisherUserId,
+            })
+          }
+        } else {
+          wx.showToast({
+            title: '官方暂未开放',
+          })
+        }
+      }
+    })
+  },
+
   likeVideoOrNot: function() {
     var me = this;
     var videoInfo = me.data.videoInfo;
@@ -176,6 +230,19 @@ Page({
           console.log(me.data);
         }
       })
+    }
+  },
+
+  onShareAppMessage: function(res) {
+    var me = this;
+    var videoInfo = me.data.videoInfo;
+    
+    if(res.from === 'button') {
+
+    }
+    return {
+      title: '短视频内容分享',
+      path: 'pages/videoInfo/videoInfo?videoInfo=' + JSON.stringify(videoInfo)
     }
   }
 })

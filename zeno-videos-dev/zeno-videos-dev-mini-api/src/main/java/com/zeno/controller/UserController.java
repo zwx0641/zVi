@@ -7,6 +7,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.druid.util.StringUtils;
 import com.imooc.pojo.Users;
+import com.imooc.pojo.UsersReport;
 import com.imooc.pojo.vo.PublisherVideo;
 import com.imooc.pojo.vo.UsersVO;
 import com.imooc.utils.IMoocJSONResult;
@@ -157,6 +159,16 @@ public class UserController extends BasicController{
 		userServ.deleteUserFanRelation(userId, fanId);
 		
 		return IMoocJSONResult.ok("取消关注成功");
+		
+	}
+	
+	@PostMapping("/reportUser")
+	public IMoocJSONResult reportUser(@RequestBody UsersReport usersReport) throws Exception {
+		
+		
+		userServ.reportUser(usersReport);
+		
+		return IMoocJSONResult.errorMsg("举报成功");
 		
 	}
 }

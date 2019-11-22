@@ -3,11 +3,11 @@
     "pages/index/index",
     "pages/videoInfo/videoInfo",
     "pages/userLogin/login",
-    
     "pages/userRegist/regist",
     "pages/mine/mine",
     "pages/chooseBgm/chooseBgm",
-    "pages/searchInfo/searchInfo"
+    "pages/searchInfo/searchInfo",
+    "pages/report/report"
     
   ],
   "window": {

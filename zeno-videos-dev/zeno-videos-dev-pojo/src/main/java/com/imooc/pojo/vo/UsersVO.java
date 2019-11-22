@@ -1,7 +1,5 @@
 package com.imooc.pojo.vo;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
